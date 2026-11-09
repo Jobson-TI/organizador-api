@@ -8,11 +8,26 @@ const selbuscar = document.getElementById("selbuscar");
 const formulario = document.getElementById("formulario");
 const aviso = document.getElementById("aviso");
 
+let token = localStorage.getItem("token") || prompt("Digite a senha de acesso:");
+localStorage.setItem("token", token);
+
 let itens = [];
+
+function api(url, opcoes = {}) {
+    opcoes.headers = {
+        ...opcoes.headers,
+        "Authorization": `Bearer ${token}`
+    };
+    return fetch(url, opcoes);
+}
 
 async function carregar() {
   try {
-    const resposta = await fetch("/itens");
+    const resposta = await api("/itens");
+    if (resposta.status === 401) {
+      localStorage.removeItem("token");
+      return mostrarAviso("Senha incorreta. Recarregue a página e tente de novo.");
+    }
     if(!resposta.ok){
       return mostrarAviso("Erro ao carregar os itens");  
     }
@@ -84,7 +99,7 @@ function renderizar() {
 
     del.addEventListener("click", async function () {
       try {
-        const resposta = await fetch(`/itens/${item.id}`, { method: "DELETE" });
+        const resposta = await api(`/itens/${item.id}`, { method: "DELETE" });
         if (!resposta.ok) {
           return mostrarAviso("Não foi possível salvar o item");
         }
@@ -131,13 +146,13 @@ async function guardarCampo(){
     let resposta;
 
     if (editando) {
-      resposta = await fetch(`/itens/${editando.id}`, {
+      resposta = await api(`/itens/${editando.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nome: nome, comodo: comodo, local: loc })
       });
     } else {
-      resposta = await fetch("/itens", {
+      resposta = await api("/itens", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ nome: nome, comodo: comodo, local: loc })

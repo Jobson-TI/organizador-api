@@ -3,6 +3,11 @@ const app = express();
 const Database = require("better-sqlite3");
 const db = new Database("organizador.db");
 
+if (!process.env.TOKEN) {
+    console.error("Erro: defina o TOKEN no arquivo .env");
+    process.exit(1);   
+}
+
 db.exec(`
     CREATE TABLE IF NOT EXISTS itens (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -15,6 +20,18 @@ db.exec(`
 app.use(express.json());
 app.use(express.static("public"));
 const port = 3000;
+
+function verificarToken(req, res, next){
+    const auth = req.headers.authorization
+
+    if (auth !== `Bearer ${process.env.TOKEN}`) {
+        return res.status(401).json({ erro: "Não autorizado" });
+    }
+    next();
+    
+}
+
+app.use("/itens", verificarToken);
 
 app.get("/sobre", function(req, res){
     res.send("Testado 1, 2, 3, funcionado");
@@ -50,8 +67,6 @@ app.delete("/itens/:id", function(req, res){
     if(resultado.changes === 0){
         return res.status(404).json({ erro: "Id incorreto" })
     } else {
-        itens.splice(pos, 1);
-        salvar();
         res.status(204).send();
     }
 
