@@ -44,6 +44,7 @@ input:focus, select:focus {
     outline: 2px solid var(--destaque); 
 }
 
+
 .cartao {
     background-color: var(--cart-pri);
     max-width: 650px;
@@ -62,6 +63,54 @@ input:focus, select:focus {
 .conteudo {
     background-color: var(--cart-obj);
     border-radius: 5px;
+}
+
+.topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 10px;
+}
+
+#tela-app-sair {
+    background-color: transparent;
+    color: var(--text-sec);
+    border: 2px solid var(--borda-campo);
+}
+
+#tela-app-sair:hover {
+    color: var(--btn-delete);
+    border-color: var(--btn-delete);
+}
+
+.login {
+    max-width: 360px;          
+    margin-top: 80px;         
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 24px;
+}
+
+#titulo-login {
+    font-size: 42px;
+    color: var(--destaque);
+    padding: 18px 0;
+}
+
+.login button {
+    background-color: var(--destaque);
+    color: #fff;
+    padding: 10px;
+}
+
+.login button:hover {
+    background-color: var(--hover-destaque);
+}
+
+#tela-login-aviso, #aviso {
+    color: var(--btn-delete);
+    font-size: 14px;
 }
 
 .buscar {

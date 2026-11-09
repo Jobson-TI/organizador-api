@@ -7,9 +7,20 @@ const buscar = document.getElementById("buscar");
 const selbuscar = document.getElementById("selbuscar");
 const formulario = document.getElementById("formulario");
 const aviso = document.getElementById("aviso");
+const tlpaviso = document.getElementById("tela-login-aviso");
+const btnsair = document.getElementById("tela-app-sair");
+const formulariologin = document.getElementById("formulario-login");
+const senha = document.getElementById("senha");
+const telaLogin = document.getElementById("tela-login");
+const telaApp = document.getElementById("tela-app");
 
-let token = localStorage.getItem("token") || prompt("Digite a senha de acesso:");
-localStorage.setItem("token", token);
+function mostrarTela(tela) {
+    telaLogin.style.display = "none";
+    telaApp.style.display = "none";
+    tela.style.display = "block";
+}
+
+let token = localStorage.getItem("token");
 
 let itens = [];
 
@@ -26,16 +37,21 @@ async function carregar() {
     const resposta = await api("/itens");
     if (resposta.status === 401) {
       localStorage.removeItem("token");
-      return mostrarAviso("Senha incorreta. Recarregue a página e tente de novo.");
+      token = null;
+      mostrarTela(telaLogin);
+      return mostrarAvisoLogin("Senha incorreta.");
     }
     if(!resposta.ok){
       return mostrarAviso("Erro ao carregar os itens");  
     }
     itens = await resposta.json();
-    mostrarAviso("")
+    mostrarAvisoLogin("");
+    mostrarAviso("");
     renderizar();  
+    mostrarTela(telaApp);
   } catch (erro) {
-    mostrarAviso("Não foi possível conectar ao servidor");
+     mostrarAviso("Não foi possível conectar ao servidor");
+    mostrarAvisoLogin("Não foi possível conectar ao servidor");
   } 
 };
 
@@ -43,6 +59,10 @@ let editando = null;
 
 function mostrarAviso(texto) {
     aviso.textContent = texto;
+}
+
+function mostrarAvisoLogin(texto) {
+    tlpaviso.textContent = texto;
 }
 
 function limparGuardar(){
@@ -160,7 +180,7 @@ async function guardarCampo(){
     }
 
     if (!resposta.ok) {
-      return mostrarAviso("Não foi possível salvar o item");
+      return mostrarAviso("Não foi possível apagar o item");
     }
 
     limparGuardar();
@@ -176,4 +196,23 @@ formulario.addEventListener("submit", function (event){
   guardarCampo();
 });
 
-carregar();
+formulariologin.addEventListener("submit", function(event){
+  event.preventDefault();
+  token = senha.value;
+  localStorage.setItem("token", token);
+  senha.value = "";
+  carregar();
+});
+
+btnsair.addEventListener("click", function(){
+  token = null;
+  limparGuardar();
+  localStorage.removeItem("token");
+  mostrarTela(telaLogin);
+});
+
+if (token) {
+  carregar();
+} else {
+  mostrarTela(telaLogin);
+}

@@ -6,38 +6,50 @@
         <title>Organizador</title>
     </head>
     <body>
-        <div class="cartao">
-            <h1>Organizador</h1>
-            <div class="buscar">
-                <input type="text" id="buscar" placeholder="Buscar objeto">
-                <select id="selbuscar">
-                    <option value="">Todos os cômodos</option>
-                    <option value="Quarto">Quarto</option>
-                    <option value="Sala">Sala</option>
-                    <option value="Banheiro">Banheiro</option>
-                    <option value="Cozinha">Cozinha</option>
-                    <option value="Quarto_2">Quarto 2</option>
-                </select>
-            </div>
-
-            <p id="aviso"></p>
-    
-            <div class="conteudo">
-                <form id="formulario">
-                    <input type="text" id="objeto" placeholder="Digite o objeto">
-                    <select id="seletor">
-                        <option value="">Escolha o cômodo</option>
+        <div id="tela-login">
+            <form id="formulario-login" class="cartao login">
+                <h1 id="titulo-login">🔒 Organizador da Casa</h1>
+                <input type="password" id="senha" placeholder="Senha de acesso">
+                <button type="submit">Entrar</button>
+                <p id="tela-login-aviso"></p>
+            </form>
+        </div>
+        <div id="tela-app">
+            <div class="cartao">
+                <div class="topo">
+                    <h1>Organizador</h1>
+                    <button id="tela-app-sair">Sair</button>
+                </div>
+                <p id="aviso"></p>
+                <div class="buscar">
+                    <input type="text" id="buscar" placeholder="Buscar objeto">
+                    <select id="selbuscar">
+                        <option value="">Todos os cômodos</option>
                         <option value="Quarto">Quarto</option>
                         <option value="Sala">Sala</option>
                         <option value="Banheiro">Banheiro</option>
                         <option value="Cozinha">Cozinha</option>
                         <option value="Quarto_2">Quarto 2</option>
                     </select>
-            
-                    <input type="text" id="local" placeholder="Onde está? Ex: gaveta da cômoda">
-                    <button id="guardar">Guardar</button>
-                </form>
-                <ul id="listar"></ul>
+                </div>
+
+                <div class="conteudo">
+                    <form id="formulario">
+                        <input type="text" id="objeto" placeholder="Digite o objeto">
+                        <select id="seletor">
+                            <option value="">Escolha o cômodo</option>
+                            <option value="Quarto">Quarto</option>
+                            <option value="Sala">Sala</option>
+                            <option value="Banheiro">Banheiro</option>
+                            <option value="Cozinha">Cozinha</option>
+                            <option value="Quarto_2">Quarto 2</option>
+                        </select>
+                
+                        <input type="text" id="local" placeholder="Onde está? Ex: gaveta da cômoda">
+                        <button id="guardar">Guardar</button>
+                    </form>
+                    <ul id="listar"></ul>
+                </div>
             </div>
         </div>
         <script src="script.js"></script>
