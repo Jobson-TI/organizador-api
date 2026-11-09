@@ -83,7 +83,7 @@ input:focus, select:focus {
     border-color: var(--btn-delete);
 }
 
-.login {
+.cartao.login {
     max-width: 360px;          
     margin-top: 80px;         
     display: flex;
@@ -98,13 +98,13 @@ input:focus, select:focus {
     padding: 18px 0;
 }
 
-.login button {
+.cartao.login button {
     background-color: var(--destaque);
     color: #fff;
     padding: 10px;
 }
 
-.login button:hover {
+.cartao.login button:hover {
     background-color: var(--hover-destaque);
 }
 
