@@ -1,0 +1,153 @@
+:root {
+    --fundo: #f5f1ea;
+    --cart-pri: #ffffff;
+    --cart-obj: #faf7f2;
+    --text-pri: #3f3a34;
+    --text-sec: #8a8178;
+    --destaque: #4f772d;
+    --hover-destaque: #3d5c22;
+    --btn-editar: #d4a373;
+    --btn-delete: #c0392b;
+    --etique-comodo: #e9edc9;
+    --borda-campo: #ddd5c8;
+}
+
+* {
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color:var(--fundo);
+    color: var(--text-pri);
+    min-height: 100vh;
+    padding: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+button {
+    color: var(--text-pri);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 8px 12px;
+}
+
+input, select {
+    color: var(--text-pri);
+    border: var(--borda-campo) 2px solid;
+    border-radius: 5px;
+    padding: 8px 12px;
+}
+
+input:focus, select:focus { 
+    outline: 2px solid var(--destaque); 
+}
+
+.cartao {
+    background-color: var(--cart-pri);
+    max-width: 650px;
+    margin: 20px auto 0 auto;
+    padding: 10px;
+    text-align: center;
+    border-radius: 5px;
+    box-shadow: 0 4px 20px rgba(63, 58, 52, 0.1);
+}
+
+.cartao h1 {
+    color: var(--destaque);
+    font-size: 64px;
+}
+
+.conteudo {
+    background-color: var(--cart-obj);
+    border-radius: 5px;
+}
+
+.buscar {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+}
+
+.buscar input {
+    flex: 1;
+}
+
+#formulario {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+#formulario input {
+    flex: 1;
+    min-width: 0;
+}
+
+#listar {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#listar li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--cart-obj);
+    padding: 12px;
+    border-radius: 8px;
+    text-align: left;
+}
+
+.info {
+    flex: 1;   
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    align-items: center;  
+}
+
+.etiqueta { 
+    background-color: var(--etique-comodo);
+    padding: 2px 8px;
+    border-radius: 999px;     
+    font-size: 15px;
+}
+
+.lugar {
+    color: var(--text-sec);
+    font-size: 17px;
+}
+
+.nome {
+    font-size: 20px;
+}
+
+.btn-delete {
+    background-color: var(--btn-delete);
+    color: #fff;
+}
+
+.btn-delete:hover, .btn-editar:hover  {
+    filter: brightness(0.9);
+}
+
+.btn-editar {
+    background-color: var(--btn-editar);
+    color: #fff;
+}
+
+#guardar {
+    background-color: var(--destaque);
+    color: #fff;
+}
+
+#guardar:hover {
+    background-color: var(--hover-destaque);
+}

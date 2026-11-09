@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <link href="style.css" rel="stylesheet">
+        <title>Organizador</title>
+    </head>
+    <body>
+        <div class="cartao">
+            <h1>Organizador</h1>
+            <div class="buscar">
+                <input type="text" id="buscar" placeholder="Buscar objeto">
+                <select id="selbuscar">
+                    <option value="">Todos os cômodos</option>
+                    <option value="Quarto">Quarto</option>
+                    <option value="Sala">Sala</option>
+                    <option value="Banheiro">Banheiro</option>
+                    <option value="Cozinha">Cozinha</option>
+                    <option value="Quarto_2">Quarto 2</option>
+                </select>
+            </div>
+
+            <p id="aviso"></p>
+    
+            <div class="conteudo">
+                <form id="formulario">
+                    <input type="text" id="objeto" placeholder="Digite o objeto">
+                    <select id="seletor">
+                        <option value="">Escolha o cômodo</option>
+                        <option value="Quarto">Quarto</option>
+                        <option value="Sala">Sala</option>
+                        <option value="Banheiro">Banheiro</option>
+                        <option value="Cozinha">Cozinha</option>
+                        <option value="Quarto_2">Quarto 2</option>
+                    </select>
+            
+                    <input type="text" id="local" placeholder="Onde está? Ex: gaveta da cômoda">
+                    <button id="guardar">Guardar</button>
+                </form>
+                <ul id="listar"></ul>
+            </div>
+        </div>
+        <script src="script.js"></script>
+    </body>
+</html>
