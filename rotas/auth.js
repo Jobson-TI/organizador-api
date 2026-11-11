@@ -46,9 +46,20 @@ router.post("/cadastro", limiteCadastro, function (req, res) {
   const senha_hash = bcrypt.hashSync(senha, 10);
 
   try {
-    const resultado = db
-      .prepare("INSERT INTO usuarios (email, senha_hash) VALUES (?, ?)")
-      .run(emailLimpo, senha_hash);
+    const cadastrar = db.transaction(function () {
+      const resultado = db
+        .prepare("INSERT INTO usuarios (email, senha_hash) VALUES (?, ?)")
+        .run(emailLimpo, senha_hash);
+      const novoId = resultado.lastInsertRowid;
+      const inserirComodo = db.prepare(
+        "INSERT INTO comodos (nome, usuario_id) VALUES (?, ?)",
+      );
+
+      ["Quarto", "Sala", "Banheiro", "Cozinha"].forEach(function (nome) {
+        inserirComodo.run(nome, novoId);
+      });
+    });
+    cadastrar();
     res.status(201).json({ id: resultado.lastInsertRowid, email: emailLimpo });
   } catch (erro) {
     if (erro.code === "SQLITE_CONSTRAINT_UNIQUE") {

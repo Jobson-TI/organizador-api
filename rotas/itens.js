@@ -9,88 +9,96 @@ const SELECT_ITENS = `
     JOIN comodos ON itens.comodo_id = comodos.id
 `;
 
-function buscarItem(id) {
-    return db.prepare(SELECT_ITENS + " WHERE itens.id = ?").get(id);
+function buscarItem(id, usuarioId) {
+  return db
+    .prepare(SELECT_ITENS + " WHERE itens.id = ? AND itens.usuario_id = ?")
+    .get(id, usuarioId);
 }
 
 router.get("/", function (req, res) {
-    const itens = db.prepare(SELECT_ITENS).all();
-    res.json(itens);
+  const itens = db
+    .prepare(SELECT_ITENS + " WHERE itens.usuario_id = ?")
+    .all(req.usuarioId);
+  res.json(itens);
 });
 
-router.get("/:id", function(req, res){
-    const id = Number(req.params.id);
-    if (!idValido(id)) {
-        return res.status(400).json({ erro: "Id inválido" });
-    }
-    
-    const item = buscarItem(id);
-    if(!item) {
-        return res.status(404).json({ erro: "Item não encontrado" });
-    }
+router.get("/:id", function (req, res) {
+  const id = Number(req.params.id);
+  if (!idValido(id)) {
+    return res.status(400).json({ erro: "Id inválido" });
+  }
 
-    res.json(item);
+  const item = buscarItem(id, req.usuarioId);
+  if (!item) {
+    return res.status(404).json({ erro: "Item não encontrado" });
+  }
+
+  res.json(item);
 });
 
-router.post("/", function(req, res){
-    const erro = validarItem(req.body);
-    if (erro) {
-        return res.status(400).json({ erro: erro });
-    }
-    
-    const nome = req.body.nome.trim();
-    const comodo_id = req.body.comodo_id;
-    const local = req.body.local.trim();
-    
-    const resultado = db
-    .prepare("INSERT INTO itens (nome, comodo_id, local) VALUES (?, ?, ?)")
-    .run(nome.trim(), comodo_id, local.trim());
+router.post("/", function (req, res) {
+  const erro = validarItem(req.body, req.usuarioId);
+  if (erro) {
+    return res.status(400).json({ erro: erro });
+  }
 
-    res.status(201).json(buscarItem(resultado.lastInsertRowid))
+  const nome = req.body.nome.trim();
+  const comodo_id = req.body.comodo_id;
+  const local = req.body.local.trim();
+
+  const resultado = db
+    .prepare(
+      "INSERT INTO itens (nome, comodo_id, local, usuario_id) VALUES (?, ?, ?, ?)",
+    )
+    .run(nome.trim(), comodo_id, local.trim(), req.usuarioId);
+
+  res.status(201).json(buscarItem(resultado.lastInsertRowid, req.usuarioId));
 });
 
-router.delete("/:id", function(req, res){
-    const id = Number(req.params.id);
+router.delete("/:id", function (req, res) {
+  const id = Number(req.params.id);
 
-    if (!idValido(id)) {
-        return res.status(400).json({ erro: "Id inválido" });
-    }
+  if (!idValido(id)) {
+    return res.status(400).json({ erro: "Id inválido" });
+  }
 
-    const resultado = db.prepare("DELETE FROM itens WHERE id = ?").run(id);
+  const resultado = db
+    .prepare("DELETE FROM itens WHERE id = ? AND usuario_id = ?")
+    .run(id, req.usuarioId);
 
-    if(resultado.changes === 0){
-        return res.status(404).json({ erro: "Id incorreto" })
-    } else {
-        res.status(204).send();
-    }
-
+  if (resultado.changes === 0) {
+    return res.status(404).json({ erro: "Id incorreto" });
+  } else {
+    res.status(204).send();
+  }
 });
 
-router.put("/:id", function(req, res){
-    const erro = validarItem(req.body);
-    if (erro) {
-        return res.status(400).json({ erro: erro });
-    }
-    
-    const id = Number(req.params.id);
-    const nome = req.body.nome.trim();
-    const comodo_id = req.body.comodo_id;
-    const local = req.body.local.trim();
-    
-    if (!idValido(id)) {
-        return res.status(400).json({ erro: "Id inválido" });
-    }
+router.put("/:id", function (req, res) {
+  const erro = validarItem(req.body, req.usuarioId);
+  if (erro) {
+    return res.status(400).json({ erro: erro });
+  }
 
-    const resultado = db
-        .prepare("UPDATE itens SET nome = ?, comodo_id = ?, local = ? WHERE id = ?")
-        .run(nome.trim(), comodo_id, local.trim(), id);
+  const id = Number(req.params.id);
+  const nome = req.body.nome.trim();
+  const comodo_id = req.body.comodo_id;
+  const local = req.body.local.trim();
 
-    if(resultado.changes === 0) {
-        return res.status(404).json({ erro: "Item não encontrado" });
-    }
+  if (!idValido(id)) {
+    return res.status(400).json({ erro: "Id inválido" });
+  }
 
+  const resultado = db
+    .prepare(
+      "UPDATE itens SET nome = ?, comodo_id = ?, local = ? WHERE id = ? AND usuario_id = ?",
+    )
+    .run(nome.trim(), comodo_id, local.trim(), id, req.usuarioId);
 
-    res.json(buscarItem(id));
+  if (resultado.changes === 0) {
+    return res.status(404).json({ erro: "Item não encontrado" });
+  }
+
+  res.json(buscarItem(id, req.usuarioId));
 });
 
 module.exports = router;
