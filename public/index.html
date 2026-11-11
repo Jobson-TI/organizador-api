@@ -1,55 +1,60 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-    <head>
-        <meta charset="UTF-8">
-        <link href="style.css" rel="stylesheet">
-        <title>Organizador</title>
-    </head>
-    <body>
-        <div id="tela-login">
-            <form id="formulario-login" class="cartao login">
-                <h1 id="titulo-login">🔒 Organizador da Casa</h1>
-                <input type="password" id="senha" placeholder="Senha de acesso">
-                <button type="submit">Entrar</button>
-                <p id="tela-login-aviso"></p>
-            </form>
-        </div>
-        <div id="tela-app">
-            <div class="cartao">
-                <div class="topo">
-                    <h1>Organizador</h1>
-                    <button id="tela-app-sair">Sair</button>
-                    <button id="btn-comodos">⚙️ Cômodos</button>
-                </div>
-                <p id="aviso"></p>
-                <div class="buscar">
-                    <input type="text" id="buscar" placeholder="Buscar objeto">
-                    <select id="selbuscar">
-                        <option value="">Todos os cômodos</option>
-                    </select>
-                </div>
 
-                <div class="conteudo">
-                    <form id="formulario">
-                        <input type="text" id="objeto" placeholder="Digite o objeto">
-                        <select id="seletor">
-                            <option value="">Escolha o cômodo</option>
-                        </select>
-                
-                        <input type="text" id="local" placeholder="Onde está? Ex: gaveta da cômoda">
-                        <button id="guardar">Guardar</button>
-                    </form>
-                    <ul id="listar"></ul>
+<head>
+    <meta charset="UTF-8">
+    <link href="style.css" rel="stylesheet">
+    <title>Organizador</title>
+</head>
+
+<body>
+    <div id="tela-login">
+        <form id="formulario-login" class="cartao login">
+            <h1 id="titulo-login">🔒 Organizador da Casa</h1>
+            <input type="password" id="senha" placeholder="Senha de acesso">
+            <button type="submit">Entrar</button>
+            <p id="tela-login-aviso"></p>
+        </form>
+    </div>
+    <div id="tela-app">
+        <div class="cartao">
+            <div class="topo">
+                <h1>Organizador</h1>
+                <div class="acoes-topo">
+                    <button id="btn-comodos">⚙️ Cômodos</button>
+                    <button id="tela-app-sair">Sair</button>
                 </div>
             </div>
+            <div id="painel-comodos" class="escondido">
+                <form id="form-comodo">
+                    <input type="text" id="novo-comodo" placeholder="Novo cômodo">
+                    <button type="submit" id="adcComodo">Adicionar</button>
+                </form>
+                <ul id="lista-comodos"></ul>
+            </div>
+            <p id="aviso"></p>
+            <div class="buscar">
+                <input type="text" id="buscar" placeholder="Buscar objeto">
+                <select id="selbuscar">
+                    <option value="">Todos os cômodos</option>
+                </select>
+            </div>
+
+            <div class="conteudo">
+                <form id="formulario">
+                    <input type="text" id="objeto" placeholder="Digite o objeto">
+                    <select id="seletor">
+                        <option value="">Escolha o cômodo</option>
+                    </select>
+
+                    <input type="text" id="local" placeholder="Onde está? Ex: gaveta da cômoda">
+                    <button id="guardar">Guardar</button>
+                </form>
+                <ul id="listar"></ul>
+            </div>
         </div>
-        <div id="painel-comodos" class="escondido">
-            <form id="form-comodo">
-                <input type="text" id="novo-comodo" placeholder="Novo cômodo">
-                <button type="submit">Adicionar</button>
-            </form>
-            <ul id="lista-comodos"></ul>
-        </div>
-        <script src="script.js"></script>
-    </body>
+    </div>
+    <script src="script.js"></script>
+</body>
+
 </html>

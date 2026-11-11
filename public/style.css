@@ -18,7 +18,7 @@
 }
 
 body {
-    background-color:var(--fundo);
+    background-color: var(--fundo);
     color: var(--text-pri);
     min-height: 100vh;
     padding: 20px;
@@ -33,15 +33,17 @@ button {
     padding: 8px 12px;
 }
 
-input, select {
+input,
+select {
     color: var(--text-pri);
     border: var(--borda-campo) 2px solid;
     border-radius: 5px;
     padding: 8px 12px;
 }
 
-input:focus, select:focus { 
-    outline: 2px solid var(--destaque); 
+input:focus,
+select:focus {
+    outline: 2px solid var(--destaque);
 }
 
 
@@ -72,20 +74,10 @@ input:focus, select:focus {
     padding: 0 10px;
 }
 
-#tela-app-sair {
-    background-color: transparent;
-    color: var(--text-sec);
-    border: 2px solid var(--borda-campo);
-}
-
-#tela-app-sair:hover {
-    color: var(--btn-delete);
-    border-color: var(--btn-delete);
-}
 
 .cartao.login {
-    max-width: 360px;          
-    margin-top: 80px;         
+    max-width: 360px;
+    margin-top: 80px;
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -98,17 +90,20 @@ input:focus, select:focus {
     padding: 18px 0;
 }
 
+#adcComodo,
 .cartao.login button {
     background-color: var(--destaque);
     color: #fff;
     padding: 10px;
 }
 
+#adcComodo:hover,
 .cartao.login button:hover {
     background-color: var(--hover-destaque);
 }
 
-#tela-login-aviso, #aviso {
+#tela-login-aviso,
+#aviso {
     color: var(--btn-delete);
     font-size: 14px;
 }
@@ -123,6 +118,11 @@ input:focus, select:focus {
     flex: 1;
 }
 
+#form-comodo {
+    display: flex;
+    gap: 10px;
+}
+
 #formulario {
     display: flex;
     flex-wrap: wrap;
@@ -131,6 +131,7 @@ input:focus, select:focus {
     padding: 10px;
 }
 
+#form-comodo input,
 #formulario input {
     flex: 1;
     min-width: 0;
@@ -155,21 +156,26 @@ input:focus, select:focus {
 }
 
 .info {
-    flex: 1;   
+    flex: 1;
     display: flex;
     flex-direction: row;
     gap: 15px;
-    align-items: center;  
+    align-items: center;
 }
 
 .escondido {
     display: none;
 }
 
-.etiqueta { 
+.acoes-topo {
+    display: flex;
+    gap: 8px;
+}
+
+.etiqueta {
     background-color: var(--etique-comodo);
     padding: 2px 8px;
-    border-radius: 999px;     
+    border-radius: 999px;
     font-size: 15px;
 }
 
@@ -187,7 +193,8 @@ input:focus, select:focus {
     color: #fff;
 }
 
-.btn-delete:hover, .btn-editar:hover  {
+.btn-delete:hover,
+.btn-editar:hover {
     filter: brightness(0.9);
 }
 
@@ -203,4 +210,89 @@ input:focus, select:focus {
 
 #guardar:hover {
     background-color: var(--hover-destaque);
+}
+
+#btn-comodos,
+#tela-app-sair {
+    background-color: transparent;
+    color: var(--text-sec);
+    border: 2px solid var(--borda-campo);
+    white-space: nowrap;
+}
+
+#btn-comodos:hover {
+    color: var(--destaque);
+    border-color: var(--destaque);
+}
+
+#tela-app-sair:hover {
+    color: var(--btn-delete);
+    border-color: var(--btn-delete);
+}
+
+#painel-comodos {
+    background-color: var(--cart-obj);
+    border-radius: 8px;
+    padding: 12px;
+    margin: 10px;
+    text-align: left;
+}
+
+#lista-comodos {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+#lista-comodos li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--etique-comodo);
+    padding: 4px 4px 4px 12px;
+    border-radius: 999px;
+}
+
+#lista-comodos button {
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: transparent;
+    color: var(--text-sec);
+    font-size: 12px;
+}
+
+#lista-comodos button:hover {
+    background-color: var(--btn-delete);
+    color: #fff;
+}
+
+#btn-comodos.ativo {
+    color: var(--destaque);
+    border-color: var(--destaque);
+    background-color: var(--etique-comodo);
+}
+
+@media (max-width: 600px) {
+    .cartao h1 {
+        font-size: 36px;
+    }
+
+    #listar li {
+        flex-wrap: wrap;
+    }
+
+    .info {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .topo {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
 }

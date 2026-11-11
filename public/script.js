@@ -276,14 +276,21 @@ formulariologin.addEventListener("submit", function (event) {
 });
 
 btnsair.addEventListener("click", function () {
+  telaComodos.classList.add("escondido");
+  btnComodos.classList.remove("ativo");
   token = null;
   limparGuardar();
+  novoComodo.value = "";
+  selbuscar.value = "";
+  buscar.value = "";
+  mostrarAviso("");
   localStorage.removeItem("token");
   mostrarTela(telaLogin);
 });
 
 btnComodos.addEventListener("click", function () {
   telaComodos.classList.toggle("escondido");
+  btnComodos.classList.toggle("ativo");
 });
 
 formComodo.addEventListener("submit", async function (event) {
