@@ -7,6 +7,11 @@ if (!process.env.TOKEN) {
   process.exit(1);
 }
 
+if (!process.env.JWT_SEGREDO) {
+  console.error("Erro: defina o JWT_SEGREDO no arquivo .env");
+  process.exit(1);
+}
+
 app.use(express.json());
 app.use(express.static("public"));
 const port = 3000;

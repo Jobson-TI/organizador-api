@@ -2,8 +2,23 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcryptjs");
 const db = require("../db");
+const jwt = require("jsonwebtoken");
+const rateLimit = require("express-rate-limit");
 
-router.post("/cadastro", function (req, res) {
+const limiteLogin = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
+  skipSuccessfulRequests: true,
+  message: { erro: "Muitas tentativas. Tente de novo em 15 minutos." },
+});
+
+const limiteCadastro = rateLimit({
+  windowMs: 24 * 60 * 60 * 1000,
+  limit: 5,
+  message: { erro: "Limite de cadastro atingido, renovação em 24 horas." },
+});
+
+router.post("/cadastro", limiteCadastro, function (req, res) {
   const email = req.body.email;
   const senha = req.body.senha;
 
@@ -41,6 +56,32 @@ router.post("/cadastro", function (req, res) {
     }
     throw erro;
   }
+});
+
+router.post("/login", limiteLogin, function (req, res) {
+  const email = req.body.email;
+  const senha = req.body.senha;
+
+  if (typeof email !== "string") {
+    return res.status(400).json({ erro: "O email é obrigatório" });
+  }
+  if (typeof senha !== "string") {
+    return res.status(400).json({ erro: "A senha é obrigatória" });
+  }
+
+  const usuario = db
+    .prepare("SELECT * FROM usuarios WHERE email = ?")
+    .get(email.trim().toLowerCase());
+
+  if (!usuario || !bcrypt.compareSync(senha, usuario.senha_hash)) {
+    return res.status(401).json({ erro: "E-mail ou senha incorretos" });
+  }
+
+  const token = jwt.sign({ id: usuario.id }, process.env.JWT_SEGREDO, {
+    expiresIn: "7d",
+  });
+
+  res.json({ token: token });
 });
 
 module.exports = router;
