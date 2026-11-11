@@ -11,6 +11,9 @@ app.use(express.json());
 app.use(express.static("public"));
 const port = 3000;
 
+const rotasComodos = require("./rotas/comodos");
+app.use("/comodos", verificarToken, rotasComodos);
+
 const rotasItens = require("./rotas/itens");
 app.use("/itens", verificarToken, rotasItens);
 
