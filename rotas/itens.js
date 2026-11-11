@@ -4,8 +4,18 @@ const router = express.Router();
 const db = require("../db");
 const { validarItem, idValido } = require("../validacoes");
 
+const SELECT_ITENS = `
+    SELECT itens.id, itens.nome, itens.local, itens.comodo_id, comodos.nome AS comodo
+    FROM itens
+    JOIN comodos ON itens.comodo_id = comodos.id
+`;
+
+function buscarItem(id) {
+    return db.prepare(SELECT_ITENS + " WHERE itens.id = ?").get(id);
+}
+
 router.get("/", function (req, res) {
-    const itens = db.prepare("SELECT * FROM itens").all();
+    const itens = db.prepare(SELECT_ITENS).all();
     res.json(itens);
 });
 
@@ -15,7 +25,7 @@ router.get("/:id", function(req, res){
         return res.status(400).json({ erro: "Id inválido" });
     }
     
-    const item = db.prepare("SELECT * FROM itens WHERE id = ?").get(id);
+    const item = buscarItem(id);
     if(!item) {
         return res.status(404).json({ erro: "Item não encontrado" });
     }
@@ -30,16 +40,14 @@ router.post("/", function(req, res){
     }
     
     const nome = req.body.nome.trim();
-    const comodo = req.body.comodo;
+    const comodo_id = req.body.comodo_id;
     const local = req.body.local.trim();
     
     const resultado = db
-    .prepare("INSERT INTO itens (nome, comodo, local) VALUES (?, ?, ?)")
-    .run(nome.trim(), comodo, local.trim());
+    .prepare("INSERT INTO itens (nome, comodo_id, local) VALUES (?, ?, ?)")
+    .run(nome.trim(), comodo_id, local.trim());
 
-    const novo = { id: resultado.lastInsertRowid, nome: nome, comodo: comodo, local: local };
-
-    res.status(201).json(novo)
+    res.status(201).json(buscarItem(resultado.lastInsertRowid))
 });
 
 router.delete("/:id", function(req, res){
@@ -67,7 +75,7 @@ router.put("/:id", function(req, res){
     
     const id = Number(req.params.id);
     const nome = req.body.nome.trim();
-    const comodo = req.body.comodo;
+    const comodo_id = req.body.comodo_id;
     const local = req.body.local.trim();
     
     if (!idValido(id)) {
@@ -75,15 +83,15 @@ router.put("/:id", function(req, res){
     }
 
     const resultado = db
-        .prepare("UPDATE itens SET nome = ?, comodo = ?, local = ? WHERE id = ?")
-        .run(nome.trim(), comodo, local.trim(), id);
+        .prepare("UPDATE itens SET nome = ?, comodo_id = ?, local = ? WHERE id = ?")
+        .run(nome.trim(), comodo_id, local.trim(), id);
 
     if(resultado.changes === 0) {
         return res.status(404).json({ erro: "Item não encontrado" });
     }
 
 
-    res.json({ id: id, nome: nome, comodo: comodo, local: local });
+    res.json(buscarItem(id));
 });
 
 module.exports = router;

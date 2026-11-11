@@ -1,8 +1,8 @@
-const COMODOS = ["Quarto", "Sala", "Banheiro", "Cozinha", "Quarto_2"];
+const db = require("./db");
 
 function validarItem(body) {
     const nome = body.nome;
-    const comodo = body.comodo;
+    const comodo_id = body.comodo_id;
     const local = body.local;
 
     if (typeof nome !== "string" || nome.trim() === "") {
@@ -11,8 +11,12 @@ function validarItem(body) {
     if (nome.trim().length > 50) {
         return "O nome pode ter no máximo 50 caracteres";
     }
-    if (!COMODOS.includes(comodo)) {
-        return "Selecione um comodo valido"
+    if (!Number.isInteger(comodo_id)){
+        return "Selecione um cômodo válido";
+    }
+    const comodo = db.prepare("SELECT id FROM comodos WHERE id = ?").get(comodo_id);
+    if (!comodo) {
+        return "Esse cômodo não existe";
     }
     if (typeof local !== "string" || local.trim() === "") {
         return "O local é obrigatório";
