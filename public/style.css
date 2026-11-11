@@ -85,9 +85,9 @@ select:focus {
 }
 
 #titulo-login {
-    font-size: 42px;
+    font-size: 32px;
     color: var(--destaque);
-    padding: 18px 0;
+    padding: 18px 0 0 0;
 }
 
 #adcComodo,
@@ -203,6 +203,11 @@ select:focus {
     color: #fff;
 }
 
+.trocar-modo {
+    font-size: 14px;
+    color: var(--text-sec);
+}
+
 #guardar {
     background-color: var(--destaque);
     color: #fff;
@@ -275,6 +280,47 @@ select:focus {
     color: var(--destaque);
     border-color: var(--destaque);
     background-color: var(--etique-comodo);
+}
+
+#btn-modo {
+    background: none;
+    padding: 0;
+    color: var(--destaque);
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+#btn-modo:hover {
+    background: none;
+    color: var(--hover-destaque);
+}
+
+#subtitulo-login {
+    font-size: 24px;
+    color: var(--text-pri);
+}
+
+.campo-senha {
+    position: relative;
+}
+
+.campo-senha input {
+    width: 100%;
+    padding-right: 44px;
+}
+
+#btn-olho {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    padding: 4px 8px;
+    font-size: 16px;
+}
+
+#btn-olho:hover {
+    background: none;
 }
 
 @media (max-width: 600px) {

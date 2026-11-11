@@ -23,6 +23,7 @@ const email = document.getElementById("email");
 const btnModo = document.getElementById("btn-modo");
 const subtituloLogin = document.getElementById("subtitulo-login");
 const textoModo = document.getElementById("texto-modo");
+const btnOlho = document.getElementById("btn-olho");
 
 function mostrarTela(tela) {
   telaLogin.style.display = "none";
@@ -73,6 +74,12 @@ function mostrarAviso(texto) {
 
 function mostrarAvisoLogin(texto) {
   tlpaviso.textContent = texto;
+}
+
+function esconderSenha() {
+  senha.type = "password";
+  btnOlho.textContent = "👁️";
+  btnOlho.setAttribute("aria-label", "Mostrar senha");
 }
 
 let comodos = [];
@@ -303,8 +310,12 @@ formulariologin.addEventListener("submit", async function (event) {
     });
 
     if (!respLogin.ok) {
-      const dados = await respLogin.json();
-      return mostrarAvisoLogin(dados.erro);
+      const dados = await respLogin.json().catch(function () {
+        return {};
+      });
+      return mostrarAvisoLogin(
+        dados.erro || "Erro no servidor. Tente novamente.",
+      );
     }
 
     const dados = await respLogin.json();
@@ -313,6 +324,7 @@ formulariologin.addEventListener("submit", async function (event) {
 
     email.value = "";
     senha.value = "";
+    esconderSenha();
     iniciar();
   } catch (erro) {
     mostrarAvisoLogin("Não foi possível conectar ao servidor");
@@ -327,6 +339,7 @@ btnsair.addEventListener("click", function () {
   novoComodo.value = "";
   selbuscar.value = "";
   buscar.value = "";
+  esconderSenha();
   mostrarAviso("");
   localStorage.removeItem("token");
   mostrarTela(telaLogin);
@@ -361,7 +374,7 @@ formComodo.addEventListener("submit", async function (event) {
     mostrarAviso("");
     carregarComodos();
   } catch (erro) {
-    mostrarAviso("Não foi possivel conectar ao servidor");
+    mostrarAviso("Não foi possível conectar ao servidor");
   }
 });
 
@@ -374,11 +387,25 @@ btnModo.addEventListener("click", function () {
     btnEnviar.textContent = "Cadastrar";
     textoModo.textContent = "Já tem conta?";
     btnModo.textContent = "Entrar";
+    senha.placeholder = "Senha (mínimo 8 caracteres)";
+    senha.autocomplete = "new-password";
   } else {
     subtituloLogin.textContent = "Entrar";
     btnEnviar.textContent = "Entrar";
     textoModo.textContent = "Não tem conta?";
     btnModo.textContent = "Criar conta";
+    senha.placeholder = "Senha";
+    senha.autocomplete = "current-password";
+  }
+});
+
+btnOlho.addEventListener("click", function () {
+  if (senha.type === "password") {
+    senha.type = "text";
+    btnOlho.textContent = "🙈";
+    btnOlho.setAttribute("aria-label", "Esconder senha");
+  } else {
+    esconderSenha();
   }
 });
 
