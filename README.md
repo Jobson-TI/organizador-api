@@ -81,6 +81,7 @@ Todas as rotas de `/itens` e `/comodos` exigem o cabeçalho `Authorization: Bear
 
 ## Estrutura
 
+```
 organizador-api/
 ├── server.js # inicia o servidor e junta as rotas
 ├── db.js # conexão e criação das tabelas
@@ -92,6 +93,7 @@ organizador-api/
 │ ├── itens.js # rotas de itens
 │ └── comodos.js # rotas de cômodos
 └── public/ # frontend (HTML, CSS e JS)
+```
 
 ## O que aprendi
 
