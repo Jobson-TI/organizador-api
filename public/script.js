@@ -65,6 +65,31 @@ function mostrarAvisoLogin(texto) {
     tlpaviso.textContent = texto;
 }
 
+let comodos = [];
+
+async function carregarComodos() {
+    const resposta = await api("/comodos");
+    if (!resposta.ok) {
+        return;
+    }
+    comodos = await resposta.json();
+
+    seletor.innerHTML = '<option value="">Escolha o cômodo</option>';
+    selbuscar.innerHTML = '<option value="">Todos os cômodos</option>';
+
+    comodos.forEach(function (comodo) {
+      const opcao1 = document.createElement("option");
+      opcao1.value = comodo.id;
+      opcao1.textContent = comodo.nome;
+      seletor.appendChild(opcao1);
+
+      const opcao2 = document.createElement("option");
+      opcao2.value = comodo.id;
+      opcao2.textContent = comodo.nome;
+      selbuscar.appendChild(opcao2);
+    });
+};
+
 function limparGuardar(){
   editando = null;
   obj.value = "";
@@ -80,7 +105,7 @@ function renderizar() {
   const visiveis = itens.filter(function (item) {
     return (
       item.nome.toLowerCase().includes(termo) &&
-      (filtro === "" || item.comodo === filtro)
+      (filtro === "" || item.comodo_id === Number(filtro))
     );
   });
 
@@ -121,7 +146,7 @@ function renderizar() {
       try {
         const resposta = await api(`/itens/${item.id}`, { method: "DELETE" });
         if (!resposta.ok) {
-          return mostrarAviso("Não foi possível salvar o item");
+          return mostrarAviso("Não foi possível apagar o item");
         }
         if (editando && editando.id === item.id) {
           limparGuardar();
@@ -134,7 +159,7 @@ function renderizar() {
 
     edit.addEventListener("click", function () {
       obj.value = item.nome;
-      seletor.value = item.comodo;
+      seletor.value = item.comodo_id;
       local.value = item.local;
 
       editando = item;
@@ -169,13 +194,13 @@ async function guardarCampo(){
       resposta = await api(`/itens/${editando.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome: nome, comodo: comodo, local: loc })
+        body: JSON.stringify({ nome: nome, comodo_id: Number(comodo), local: loc })
       });
     } else {
       resposta = await api("/itens", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome: nome, comodo: comodo, local: loc })
+        body: JSON.stringify({ nome: nome, comodo_id: Number(comodo), local: loc })
       });
     }
 
@@ -201,7 +226,7 @@ formulariologin.addEventListener("submit", function(event){
   token = senha.value;
   localStorage.setItem("token", token);
   senha.value = "";
-  carregar();
+  iniciar();
 });
 
 btnsair.addEventListener("click", function(){
@@ -211,8 +236,13 @@ btnsair.addEventListener("click", function(){
   mostrarTela(telaLogin);
 });
 
+async function iniciar() {
+    await carregarComodos();
+    carregar();
+}
+
 if (token) {
-  carregar();
+  iniciar();
 } else {
   mostrarTela(telaLogin);
 }
