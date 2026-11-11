@@ -58,9 +58,11 @@ router.post("/cadastro", limiteCadastro, function (req, res) {
       ["Quarto", "Sala", "Banheiro", "Cozinha"].forEach(function (nome) {
         inserirComodo.run(nome, novoId);
       });
+
+      return novoId;
     });
-    cadastrar();
-    res.status(201).json({ id: resultado.lastInsertRowid, email: emailLimpo });
+    const novoId = cadastrar();
+    res.status(201).json({ id: novoId, email: emailLimpo });
   } catch (erro) {
     if (erro.code === "SQLITE_CONSTRAINT_UNIQUE") {
       return res.status(409).json({ erro: "Esse conta já existe" });

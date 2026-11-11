@@ -18,6 +18,11 @@ const formComodo = document.getElementById("form-comodo");
 const btnComodos = document.getElementById("btn-comodos");
 const listaComodos = document.getElementById("lista-comodos");
 const novoComodo = document.getElementById("novo-comodo");
+const btnEnviar = document.getElementById("btn-enviar");
+const email = document.getElementById("email");
+const btnModo = document.getElementById("btn-modo");
+const subtituloLogin = document.getElementById("subtitulo-login");
+const textoModo = document.getElementById("texto-modo");
 
 function mostrarTela(tela) {
   telaLogin.style.display = "none";
@@ -26,7 +31,7 @@ function mostrarTela(tela) {
 }
 
 let token = localStorage.getItem("token");
-
+let modoCadastro = false;
 let itens = [];
 
 function api(url, opcoes = {}) {
@@ -44,7 +49,7 @@ async function carregar() {
       localStorage.removeItem("token");
       token = null;
       mostrarTela(telaLogin);
-      return mostrarAvisoLogin("Senha incorreta.");
+      return mostrarAvisoLogin("Sessão expirada. Faça login de novo.");
     }
     if (!resposta.ok) {
       return mostrarAviso("Erro ao carregar os itens");
@@ -267,12 +272,51 @@ formulario.addEventListener("submit", function (event) {
   guardarCampo();
 });
 
-formulariologin.addEventListener("submit", function (event) {
+formulariologin.addEventListener("submit", async function (event) {
   event.preventDefault();
-  token = senha.value;
-  localStorage.setItem("token", token);
-  senha.value = "";
-  iniciar();
+
+  const emailDigitado = email.value.trim();
+  const senhaDigitado = senha.value;
+
+  try {
+    if (modoCadastro) {
+      const respCadastro = await fetch("/auth/cadastro", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: emailDigitado, senha: senhaDigitado }),
+      });
+
+      if (!respCadastro.ok) {
+        const dados = await respCadastro.json().catch(function () {
+          return {};
+        });
+        return mostrarAvisoLogin(
+          dados.erro || "Erro no servidor. Tente novamente.",
+        );
+      }
+    }
+
+    const respLogin = await fetch("/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: emailDigitado, senha: senhaDigitado }),
+    });
+
+    if (!respLogin.ok) {
+      const dados = await respLogin.json();
+      return mostrarAvisoLogin(dados.erro);
+    }
+
+    const dados = await respLogin.json();
+    token = dados.token;
+    localStorage.setItem("token", token);
+
+    email.value = "";
+    senha.value = "";
+    iniciar();
+  } catch (erro) {
+    mostrarAvisoLogin("Não foi possível conectar ao servidor");
+  }
 });
 
 btnsair.addEventListener("click", function () {
@@ -318,6 +362,23 @@ formComodo.addEventListener("submit", async function (event) {
     carregarComodos();
   } catch (erro) {
     mostrarAviso("Não foi possivel conectar ao servidor");
+  }
+});
+
+btnModo.addEventListener("click", function () {
+  modoCadastro = !modoCadastro;
+  mostrarAvisoLogin("");
+
+  if (modoCadastro) {
+    subtituloLogin.textContent = "Criar conta";
+    btnEnviar.textContent = "Cadastrar";
+    textoModo.textContent = "Já tem conta?";
+    btnModo.textContent = "Entrar";
+  } else {
+    subtituloLogin.textContent = "Entrar";
+    btnEnviar.textContent = "Entrar";
+    textoModo.textContent = "Não tem conta?";
+    btnModo.textContent = "Criar conta";
   }
 });
 

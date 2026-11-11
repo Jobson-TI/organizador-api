@@ -11,8 +11,14 @@
     <div id="tela-login">
         <form id="formulario-login" class="cartao login">
             <h1 id="titulo-login">🔒 Organizador da Casa</h1>
-            <input type="password" id="senha" placeholder="Senha de acesso">
-            <button type="submit">Entrar</button>
+            <h2 id="subtitulo-login">Entrar</h2>
+            <input type="email" id="email" placeholder="seu@email.com" autocomplete="email">
+            <input type="password" id="senha" placeholder="Senha" autocomplete="current-password">
+            <button type="submit" id="btn-enviar">Entrar</button>
+            <p class="trocar-modo">
+                <span id="texto-modo">Não tem conta?</span>
+                <button type="button" id="btn-modo">Criar conta</button>
+            </p>
             <p id="tela-login-aviso"></p>
         </form>
     </div>
