@@ -162,6 +162,10 @@ input:focus, select:focus {
     align-items: center;  
 }
 
+.escondido {
+    display: none;
+}
+
 .etiqueta { 
     background-color: var(--etique-comodo);
     padding: 2px 8px;

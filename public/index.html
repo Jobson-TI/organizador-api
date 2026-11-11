@@ -19,6 +19,7 @@
                 <div class="topo">
                     <h1>Organizador</h1>
                     <button id="tela-app-sair">Sair</button>
+                    <button id="btn-comodos">⚙️ Cômodos</button>
                 </div>
                 <p id="aviso"></p>
                 <div class="buscar">
@@ -41,6 +42,13 @@
                     <ul id="listar"></ul>
                 </div>
             </div>
+        </div>
+        <div id="painel-comodos" class="escondido">
+            <form id="form-comodo">
+                <input type="text" id="novo-comodo" placeholder="Novo cômodo">
+                <button type="submit">Adicionar</button>
+            </form>
+            <ul id="lista-comodos"></ul>
         </div>
         <script src="script.js"></script>
     </body>

@@ -13,11 +13,16 @@ const formulariologin = document.getElementById("formulario-login");
 const senha = document.getElementById("senha");
 const telaLogin = document.getElementById("tela-login");
 const telaApp = document.getElementById("tela-app");
+const telaComodos = document.getElementById("painel-comodos");
+const formComodo = document.getElementById("form-comodo");
+const btnComodos = document.getElementById("btn-comodos");
+const listaComodos = document.getElementById("lista-comodos");
+const novoComodo = document.getElementById("novo-comodo");
 
 function mostrarTela(tela) {
-    telaLogin.style.display = "none";
-    telaApp.style.display = "none";
-    tela.style.display = "block";
+  telaLogin.style.display = "none";
+  telaApp.style.display = "none";
+  tela.style.display = "block";
 }
 
 let token = localStorage.getItem("token");
@@ -25,11 +30,11 @@ let token = localStorage.getItem("token");
 let itens = [];
 
 function api(url, opcoes = {}) {
-    opcoes.headers = {
-        ...opcoes.headers,
-        "Authorization": `Bearer ${token}`
-    };
-    return fetch(url, opcoes);
+  opcoes.headers = {
+    ...opcoes.headers,
+    Authorization: `Bearer ${token}`,
+  };
+  return fetch(url, opcoes);
 }
 
 async function carregar() {
@@ -41,41 +46,46 @@ async function carregar() {
       mostrarTela(telaLogin);
       return mostrarAvisoLogin("Senha incorreta.");
     }
-    if(!resposta.ok){
-      return mostrarAviso("Erro ao carregar os itens");  
+    if (!resposta.ok) {
+      return mostrarAviso("Erro ao carregar os itens");
     }
     itens = await resposta.json();
     mostrarAvisoLogin("");
     mostrarAviso("");
-    renderizar();  
+    renderizar();
     mostrarTela(telaApp);
   } catch (erro) {
-     mostrarAviso("Não foi possível conectar ao servidor");
+    mostrarAviso("Não foi possível conectar ao servidor");
     mostrarAvisoLogin("Não foi possível conectar ao servidor");
-  } 
-};
+  }
+}
 
 let editando = null;
 
 function mostrarAviso(texto) {
-    aviso.textContent = texto;
+  aviso.textContent = texto;
 }
 
 function mostrarAvisoLogin(texto) {
-    tlpaviso.textContent = texto;
+  tlpaviso.textContent = texto;
 }
 
 let comodos = [];
 
 async function carregarComodos() {
+  try {
     const resposta = await api("/comodos");
     if (!resposta.ok) {
-        return;
+      return;
     }
     comodos = await resposta.json();
 
+    const filtroAtual = selbuscar.value;
+    const seletorAtual = seletor.value;
+
     seletor.innerHTML = '<option value="">Escolha o cômodo</option>';
     selbuscar.innerHTML = '<option value="">Todos os cômodos</option>';
+    listaComodos.innerHTML = "";
 
     comodos.forEach(function (comodo) {
       const opcao1 = document.createElement("option");
@@ -87,16 +97,47 @@ async function carregarComodos() {
       opcao2.value = comodo.id;
       opcao2.textContent = comodo.nome;
       selbuscar.appendChild(opcao2);
-    });
-};
 
-function limparGuardar(){
+      const liComodo = document.createElement("li");
+      const btnComodo = document.createElement("button");
+      liComodo.textContent = comodo.nome;
+      btnComodo.textContent = "X";
+      liComodo.appendChild(btnComodo);
+      listaComodos.appendChild(liComodo);
+
+      btnComodo.addEventListener("click", async function () {
+        try {
+          const resposta = await api(`/comodos/${comodo.id}`, {
+            method: "DELETE",
+          });
+          if (!resposta.ok) {
+            const dados = await resposta.json();
+            return mostrarAviso(dados.erro);
+          }
+
+          mostrarAviso("");
+          carregarComodos();
+        } catch (erro) {
+          mostrarAviso("Não foi possível conectar ao servidor");
+        }
+      });
+    });
+
+    selbuscar.value = filtroAtual;
+    seletor.value = seletorAtual;
+    renderizar();
+  } catch (erro) {
+    return;
+  }
+}
+
+function limparGuardar() {
   editando = null;
   obj.value = "";
   local.value = "";
   seletor.value = "";
   guardar.textContent = "Guardar";
-};
+}
 
 function renderizar() {
   const termo = buscar.value.trim().toLowerCase();
@@ -138,7 +179,7 @@ function renderizar() {
     li.appendChild(edit);
     li.appendChild(del);
     listar.appendChild(li);
-    
+
     edit.classList.add("btn-editar");
     del.classList.add("btn-delete");
 
@@ -168,8 +209,6 @@ function renderizar() {
   });
 }
 
-
-
 buscar.addEventListener("input", function () {
   renderizar();
 });
@@ -178,7 +217,7 @@ selbuscar.addEventListener("change", function () {
   renderizar();
 });
 
-async function guardarCampo(){
+async function guardarCampo() {
   const nome = obj.value.trim();
   const comodo = seletor.value;
   const loc = local.value.trim();
@@ -194,34 +233,41 @@ async function guardarCampo(){
       resposta = await api(`/itens/${editando.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome: nome, comodo_id: Number(comodo), local: loc })
+        body: JSON.stringify({
+          nome: nome,
+          comodo_id: Number(comodo),
+          local: loc,
+        }),
       });
     } else {
       resposta = await api("/itens", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ nome: nome, comodo_id: Number(comodo), local: loc })
+        body: JSON.stringify({
+          nome: nome,
+          comodo_id: Number(comodo),
+          local: loc,
+        }),
       });
     }
 
     if (!resposta.ok) {
-      return mostrarAviso("Não foi possível apagar o item");
+      return mostrarAviso("Não foi possível salvar o item");
     }
 
     limparGuardar();
-    carregar();  
+    carregar();
   } catch (erro) {
     mostrarAviso("Não foi possível conectar ao servidor");
   }
+}
 
-};
-
-formulario.addEventListener("submit", function (event){
+formulario.addEventListener("submit", function (event) {
   event.preventDefault();
   guardarCampo();
 });
 
-formulariologin.addEventListener("submit", function(event){
+formulariologin.addEventListener("submit", function (event) {
   event.preventDefault();
   token = senha.value;
   localStorage.setItem("token", token);
@@ -229,16 +275,48 @@ formulariologin.addEventListener("submit", function(event){
   iniciar();
 });
 
-btnsair.addEventListener("click", function(){
+btnsair.addEventListener("click", function () {
   token = null;
   limparGuardar();
   localStorage.removeItem("token");
   mostrarTela(telaLogin);
 });
 
+btnComodos.addEventListener("click", function () {
+  telaComodos.classList.toggle("escondido");
+});
+
+formComodo.addEventListener("submit", async function (event) {
+  event.preventDefault();
+
+  const nome = novoComodo.value.trim();
+  if (nome === "") {
+    return mostrarAviso("Digite o nome do cômodo");
+  }
+
+  try {
+    const resposta = await api("/comodos", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nome: nome }),
+    });
+
+    if (!resposta.ok) {
+      const dados = await resposta.json();
+      return mostrarAviso(dados.erro);
+    }
+
+    novoComodo.value = "";
+    mostrarAviso("");
+    carregarComodos();
+  } catch (erro) {
+    mostrarAviso("Não foi possivel conectar ao servidor");
+  }
+});
+
 async function iniciar() {
-    await carregarComodos();
-    carregar();
+  await carregarComodos();
+  carregar();
 }
 
 if (token) {
